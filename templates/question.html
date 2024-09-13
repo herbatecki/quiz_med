@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Medyczny</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 18px;
+        }        
+        h2 {
+            font-size: 18px;
+        }
+        .answers input {
+            margin-right: 10px;
+        }
+        .explanation {
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .result {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1 style="text-align:center">Egzamin Lekarski wewnętrzny 2</h1>
+        <h2>{{ question.prompt | replace('\n', '<br>') | safe }}</h2>
+        
+        {% if not show_explanation %}
+            <form method="post">
+                {% for option in question.options %}
+                    <label>
+                        <input type="radio" name="option" value="{{ loop.index0 }}" required>
+                        {{ option }}
+                    </label><br>
+                {% endfor %}
+                <button type="submit">Zatwierdź</button>
+            </form>
+        {% else %}
+            {% if correct %}
+                <p class="result">Dobrze!</p>
+            {% else %}
+                <p class="result">Źle. Prawidłowa odpowiedź to: {{ question.options[question.correct_answer] }}</p>
+            {% endif %}
+            <p class="explanation">{{ question.explanation }}</p>
+            <a href="{{ url_for('question') }}">Następne pytanie</a>
+        {% endif %}
+    </div>
+</body>
+</html>
+
